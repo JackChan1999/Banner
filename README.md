@@ -446,3 +446,29 @@ https://github.com/JackChen1999/Banner
 ## [AndroidImageSlider](https://github.com/JackChen1999/AndroidImageSlider)
 
 ![](https://camo.githubusercontent.com/f64413139bbaa918131384d3597c33e39333aa7f/687474703a2f2f7777332e73696e61696d672e636e2f6d773639302f36313064633033346a773165677a6f7236366f6a64673230393530666b6e70652e676966)
+
+# 关于我
+
+- Email：<815712739@qq.com>
+- CSDN博客：[Allen Iverson](http://blog.csdn.net/axi295309066)
+- 新浪微博：[AndroidDeveloper](http://weibo.com/u/1848214604?topnav=1&amp;wvr=6&amp;topsug=1&amp;is_all=1)
+
+# License
+
+    Copyright 2015 AllenIverson
+
+    Copyright 2012 Jake Wharton
+    Copyright 2011 Patrik Åkerfeldt
+    Copyright 2011 Francisco Figueiredo Jr.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
