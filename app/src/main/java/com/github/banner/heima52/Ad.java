@@ -4,7 +4,6 @@ public class Ad {
 	private int iconResId;
 	private String intro;
 	
-	
 	public Ad(int iconResId, String intro) {
 		super();
 		this.iconResId = iconResId;

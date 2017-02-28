@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements OnPageChangeListener {
 		mPager.setAdapter(new MyAdapter());
 
 		// 设置监听器
-		mPager.setOnPageChangeListener(this);
+		mPager.addOnPageChangeListener(this);
 
 		// 设置默认选中中间的item
 		int middle = Integer.MAX_VALUE / 2;
@@ -103,7 +103,6 @@ public class MainActivity extends Activity implements OnPageChangeListener {
 		// 初始化item
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-
 			position = position % mListDatas.size();
 
 			// position： 要加载的位置
@@ -123,7 +122,6 @@ public class MainActivity extends Activity implements OnPageChangeListener {
 			// object:标记
 
 			position = position % mListDatas.size();
-
 			ImageView iv = mListDatas.get(position);
 			mPager.removeView(iv);
 		}
@@ -164,7 +162,6 @@ public class MainActivity extends Activity implements OnPageChangeListener {
 		}
 
 		mTvTitle.setText(titles[position]);
-
 	}
 
 	// 回调方法,当viewpager的滑动状态改变时的回调

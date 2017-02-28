@@ -146,9 +146,7 @@ public class MainActivity extends Activity {
 //			super.destroyItem(container, position, object);
 			container.removeView((View) object);
 		}
-		
-		
-		
+
 	}
 
 }

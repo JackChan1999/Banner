@@ -24,8 +24,7 @@ public class MainActivity extends Activity {
 	private TextView tv_msg;
 	private LinearLayout ll_point_group;
 	//图片资源
-	private int[] ids = { R.drawable.a, R.drawable.b, R.drawable.c,
-			R.drawable.d, R.drawable.e };
+	private int[] ids = { R.drawable.a, R.drawable.b, R.drawable.c, R.drawable.d, R.drawable.e };
 
 	// 图片标题集合
 	private final String[] imageDescriptions = {
@@ -52,9 +51,7 @@ public class MainActivity extends Activity {
 			if(!isDestroyed){
 				handler.sendEmptyMessageDelayed(0, 2000);
 			}
-
-
-		};
+		}
 	};
 
 	/**
@@ -101,8 +98,6 @@ public class MainActivity extends Activity {
 
 			//添加指示点
 			ll_point_group.addView(iv_point);
-
-
 		}
 
 		// 设置适配器
@@ -118,11 +113,8 @@ public class MainActivity extends Activity {
 
 		tv_msg.setText(imageDescriptions[item%imageViews.size()]);
 
-
-
-
 		//监听页面改变的方法
-		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+		viewPager.addOnPageChangeListener(new OnPageChangeListener() {
 
 			/**
 			 * 当某个页面选中的时候回调
@@ -131,7 +123,6 @@ public class MainActivity extends Activity {
 			@Override
 			public void onPageSelected(int position) {
 				int newIndex = position % imageViews.size();
-				// TODO Auto-generated method stub
 				tv_msg.setText(imageDescriptions[newIndex]);
 
 				//当前下标点高亮
@@ -140,9 +131,6 @@ public class MainActivity extends Activity {
 				//上一次高亮显示的变成默认
 				ll_point_group.getChildAt(lastPointIndex).setEnabled(false);
 				lastPointIndex = newIndex;
-
-
-
 			}
 
 			/**
@@ -155,7 +143,6 @@ public class MainActivity extends Activity {
 			@Override
 			public void onPageScrolled(int position, float positionOffset,
 									   int positionOffsetPixels) {
-				// TODO Auto-generated method stub
 
 			}
 
@@ -173,7 +160,6 @@ public class MainActivity extends Activity {
 		isDestroyed = false;
 		//发消息开始滚动
 		handler.sendEmptyMessageDelayed(0, 2000);
-
 	}
 
 
@@ -187,7 +173,6 @@ public class MainActivity extends Activity {
 
 		@Override
 		public int getCount() {
-
 			return Integer.MAX_VALUE;//imageViews.size();//5
 		}
 

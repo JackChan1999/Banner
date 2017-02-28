@@ -35,7 +35,6 @@ public class MainActivity extends Activity {
 		public void handleMessage(android.os.Message msg) {
 			int currentItem = mViewPager.getCurrentItem();// 获取当前页面位置
 			mViewPager.setCurrentItem(++currentItem);// 跳到下一个页面
-
 			// 继续发送延时2秒的消息, 形成类似递归的效果, 使广告一直循环切换
 			mHandler.sendEmptyMessageDelayed(0, 2000);
 		};
@@ -55,7 +54,7 @@ public class MainActivity extends Activity {
 		mViewPager.setCurrentItem(mImageIds.length * 10000);
 
 		// 设置滑动监听
-		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+		mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
 
 			// 某个页面被选中
 			@Override
