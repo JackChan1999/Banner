@@ -1,14 +1,14 @@
-# Banner 轮播图，广告栏控件
+# Banner、轮播图、广告栏控件
 
-##一、项目概述
+##1. 项目概述
 这里，我们使用自定义组合控件实现一个自动轮播的广告条，也叫轮播图，完整版的效果图如下图所示。其实，这就是我们经常见到的滚动广告，默认情况下每隔N 秒会自动滚动，用手指左右滑动时也会切换到上一张或者下一张。当界面切换时，对应广告图片的标题也会随着改变，并且还有对应图片索引的点也会被选中变为红色。此处，实现的核心控件是ViewPager，它是Android3.0 版本加入的新控件，为了向下兼容，谷歌给我们提供了android-support-v4.jar 包。
 
 ![这里写图片描述](http://img.blog.csdn.net/20161014212221565)
 
-##二、轮播图UI布局
+##2. 轮播图UI布局
 布局整体采用RelativeLayout，android.support.v4.view.ViewPager，TextView，LinearLayout 配合使用布局文件activity_main.xml 的代码如下文件所示：
 
-```java
+```xml
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -50,9 +50,9 @@
     </FrameLayout>
 </RelativeLayout>
 ```
-##轮播图的代码逻辑实现
+##3. 轮播图的代码逻辑实现
 
-```java
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -102,7 +102,6 @@
         android:layout_height="match_parent"/>
 
 </LinearLayout>
-
 ```
 
 
@@ -417,33 +416,242 @@ public class BannerActivity extends AppCompatActivity implements ViewPager.OnPag
 }
 ```
 
-# 开源项目
+## 4. 把Banner封装成一个模块
 
-## [Android-ConvenientBanner](https://github.com/JackChen1999/Android-ConvenientBanner)
+```java
+public class RollViewPager extends ViewPager implements ViewPager.OnPageChangeListener {
+
+    private List<String> mImageLists;
+    private List<String> mTitleLists;
+    private List<View>   mDotLists;
+    public  Context      mContext;
+    private TextView     mTopNewsTitle;
+    private Task         mTask;
+    private boolean hasAdapter   = false;
+    private int     oldPosition  = 0;
+    private int     mCurrentItem = 0;
+    private int  downX;
+    private int  downY;
+    private long downTimeMillis;
+
+    // 是否滑动
+    private boolean isMove = false;
+
+    public RollViewPager(Context context, List<View> mDotLists) {
+        super(context);
+        this.mDotLists = mDotLists;
+        this.mContext = context;
+        mTask = new Task();
+
+        // 设置viewpager 的触摸事件
+        RollViewPager.this.setOnTouchListener(new OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                // 当手指触摸到屏幕的时候。viewpage 停止跳动
+                // 当手指离开屏幕的时候。viewpage 继续跳动
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // 获取到down 的时间
+
+                    downTimeMillis = System.currentTimeMillis();
+
+                    // 停止跳动
+                    // 删除消息
+                    handler.removeCallbacksAndMessages(null);
+
+                    // 删除任务
+                    //handler.removeCallbacks(mTask);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    // 获取的是当前时间
+                    long currentTimeMillis = System.currentTimeMillis();
+                    if (currentTimeMillis - downTimeMillis < 500) {
+                        // Toast.makeText(mContext, "我被点击了", 0).show();
+                        if (mViewPageOnTouchListener != null) {
+                            mViewPageOnTouchListener.onViewPageClickListener();
+                        }
+                    }
+                    // 继续跳动
+                    start();
+                } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    System.out.println("MotionEvent.ACTION_CANCEL");
+                    start();
+                }
+
+                return false;
+            }
+        });
+    }
+
+    public void start() {
+        if (!hasAdapter) {
+            hasAdapter = true;
+            RollViewPagerAdapter adapter = new RollViewPagerAdapter();
+            RollViewPager.this.setAdapter(adapter);
+            RollViewPager.this.setOnPageChangeListener(this);
+        }
+        handler.postDelayed(mTask, 2000);
+    }
+
+    public void stop() {
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mCurrentItem = position;
+
+        if (null != mTitleLists && mTitleLists.size() > 0
+                && null != mTopNewsTitle) {
+            mTopNewsTitle.setText(mTitleLists.get(position));
+        }
+
+        if (null != mDotLists && mDotLists.size() > 0) {
+            mDotLists.get(position).setBackgroundResource(R.drawable.dot_focus);
+            mDotLists.get(oldPosition).setBackgroundResource(
+                    R.drawable.dot_normal);
+        }
+        oldPosition = position;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                downX = (int) ev.getX();
+                downY = (int) ev.getY();
+                // isMove = false;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+
+                int currentX = (int) ev.getX();
+                int currentY = (int) ev.getY();
+
+                if (Math.abs(currentX - downX) > Math.abs(currentY - downY)) {
+                    // 左右滑动viewPage
+
+                    isMove = false;
+                } else {
+                    // 上下滑动listview
+                    isMove = true;
+                }
+
+                break;
+        }
+        // 请求父类不要拦截我
+        getParent().requestDisallowInterceptTouchEvent(!isMove);
+
+        return super.dispatchTouchEvent(ev);
+    }
+
+    private class RollViewPagerAdapter extends PagerAdapter {
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+
+            container.removeView((View) object);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            View view = View.inflate(mContext, R.layout.viewpager_item, null);
+            ImageView image = (ImageView) view.findViewById(R.id.image);
+            BitmapUtils.display(mContext, image, mImageLists.get(position));
+            container.addView(view);
+            return view;
+        }
+
+        @Override
+        public int getCount() {
+            return mImageLists.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+    }
+
+    /**
+     * 设置轮播图上面的标题
+     *
+     * @param mTopNewsTitle
+     * @param mTitleLists
+     */
+    public void setTextTitle(TextView mTopNewsTitle, List<String> mTitleLists) {
+        if (null != mTopNewsTitle && null != mTitleLists && mTitleLists.size() > 0) {
+            this.mTopNewsTitle = mTopNewsTitle;
+            this.mTitleLists = mTitleLists;
+            mTopNewsTitle.setText(mTitleLists.get(0));
+        }
+
+    }
+
+    /**
+     * 设置背景图片
+     *
+     * @param mImageLists
+     */
+    public void setImageRes(List<String> mImageLists) {
+        this.mImageLists = mImageLists;
+    }
+
+    private class Task implements Runnable {
+
+        @Override
+        public void run() {
+            mCurrentItem = (mCurrentItem + 1) % mImageLists.size();
+            handler.obtainMessage().sendToTarget();
+        }
+
+    }
+
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            RollViewPager.this.setCurrentItem(mCurrentItem, false);
+            start();
+        }
+    };
+
+    private ViewPageOnTouchListener mViewPageOnTouchListener;
+
+    public interface ViewPageOnTouchListener {
+        public void onViewPageClickListener();
+    }
+
+    public void setViewPageOnTouchListener(ViewPageOnTouchListener viewPageOnTouchListener) {
+        mViewPageOnTouchListener = viewPageOnTouchListener;
+    }
+}
+```
+
+> 源代码：https://github.com/JackChen1999/Banner
+
+## 5. 开源项目
+
+### [Android-ConvenientBanner](https://github.com/JackChen1999/Android-ConvenientBanner)
 
 ![](https://github.com/saiwu-bigkoo/Android-ConvenientBanner/raw/master/preview/convenientbannerdemo.gif)
 
-## [DecentBanner](https://github.com/JackChen1999/DecentBanner)
+###  [DecentBanner](https://github.com/JackChen1999/DecentBanner)
 
 ![](https://github.com/JackChen1999/DecentBanner/raw/master/images/decent_sample.gif)
 
-## [AndroidImageSlider](https://github.com/JackChen1999/AndroidImageSlider)
-
-![](https://camo.githubusercontent.com/f64413139bbaa918131384d3597c33e39333aa7f/687474703a2f2f7777332e73696e61696d672e636e2f6d773639302f36313064633033346a773165677a6f7236366f6a64673230393530666b6e70652e676966)
-
-https://github.com/JackChen1999/Banner
-
-# 开源项目
-
-## [Android-ConvenientBanner](https://github.com/JackChen1999/Android-ConvenientBanner)
-
-![](https://github.com/saiwu-bigkoo/Android-ConvenientBanner/raw/master/preview/convenientbannerdemo.gif)
-
-## [DecentBanner](https://github.com/JackChen1999/DecentBanner)
-
-![](https://github.com/JackChen1999/DecentBanner/raw/master/images/decent_sample.gif)
-
-## [AndroidImageSlider](https://github.com/JackChen1999/AndroidImageSlider)
+###  [AndroidImageSlider](https://github.com/JackChen1999/AndroidImageSlider)
 
 ![](https://camo.githubusercontent.com/f64413139bbaa918131384d3597c33e39333aa7f/687474703a2f2f7777332e73696e61696d672e636e2f6d773639302f36313064633033346a773165677a6f7236366f6a64673230393530666b6e70652e676966)
 
@@ -460,13 +668,13 @@ https://github.com/JackChen1999/Banner
     Copyright 2012 Jake Wharton
     Copyright 2011 Patrik Åkerfeldt
     Copyright 2011 Francisco Figueiredo Jr.
-
+    
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-
+    
        http://www.apache.org/licenses/LICENSE-2.0
-
+    
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
