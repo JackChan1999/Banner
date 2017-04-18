@@ -1,11 +1,11 @@
 # Banner、轮播图、广告栏控件
 
-##1. 项目概述
+## 1. 项目概述
 这里，我们使用自定义组合控件实现一个自动轮播的广告条，也叫轮播图，完整版的效果图如下图所示。其实，这就是我们经常见到的滚动广告，默认情况下每隔N 秒会自动滚动，用手指左右滑动时也会切换到上一张或者下一张。当界面切换时，对应广告图片的标题也会随着改变，并且还有对应图片索引的点也会被选中变为红色。此处，实现的核心控件是ViewPager，它是Android3.0 版本加入的新控件，为了向下兼容，谷歌给我们提供了android-support-v4.jar 包。
 
-![这里写图片描述](http://img.blog.csdn.net/20161014212221565)
+![banner](http://img.blog.csdn.net/20161014212221565)
 
-##2. 轮播图UI布局
+## 2. 轮播图UI布局
 布局整体采用RelativeLayout，android.support.v4.view.ViewPager，TextView，LinearLayout 配合使用布局文件activity_main.xml 的代码如下文件所示：
 
 ```xml
@@ -50,7 +50,7 @@
     </FrameLayout>
 </RelativeLayout>
 ```
-##3. 轮播图的代码逻辑实现
+## 3. 轮播图的代码逻辑实现
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -676,13 +676,13 @@ public class RollViewPager extends ViewPager implements ViewPager.OnPageChangeLi
     Copyright 2012 Jake Wharton
     Copyright 2011 Patrik Åkerfeldt
     Copyright 2011 Francisco Figueiredo Jr.
-    
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-    
+
        http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
