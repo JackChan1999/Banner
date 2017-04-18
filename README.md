@@ -655,6 +655,14 @@ public class RollViewPager extends ViewPager implements ViewPager.OnPageChangeLi
 
 ![](https://camo.githubusercontent.com/f64413139bbaa918131384d3597c33e39333aa7f/687474703a2f2f7777332e73696e61696d672e636e2f6d773639302f36313064633033346a773165677a6f7236366f6a64673230393530666b6e70652e676966)
 
+### [LoopViewPagerLayout](https://github.com/why168/LoopViewPagerLayout)
+
+![](https://raw.githubusercontent.com/why168/LoopViewPager/master/art/sample3.gif)
+
+### BGABanner-Android
+
+![BGABanner-Android](https://cloud.githubusercontent.com/assets/8949716/17557718/dc235ec4-5f4a-11e6-92b7-144a2a1a1e3f.gif)
+
 # 关于我
 
 - Email：<815712739@qq.com>
