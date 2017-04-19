@@ -641,6 +641,44 @@ public class RollViewPager extends ViewPager implements ViewPager.OnPageChangeLi
 
 > 源代码：https://github.com/JackChen1999/Banner
 
+```java
+		Handler	handler = new Handler();		
+		//清空掉原来所有的任务
+		handler.removeCallbacksAndMessages(null);
+		
+		handler.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				//任务
+				//控制轮播图的显示
+				vp_lunbo.setCurrentItem((vp_lunbo.getCurrentItem() + 1) % vp_lunbo.getAdapter().getCount());
+				handler.postDelayed(this, 1500);
+			}
+		}, 1500);
+```
+封装代码
+```java
+	private class LunBoTask extends Handler implements Runnable{
+
+		public void stopLunbo(){
+			//移除当前所有的任务
+			removeCallbacksAndMessages(null);
+		}
+		public void startLunbo(){
+			stopLunbo();
+			postDelayed(this, 2000);
+		}
+		@Override
+		public void run() {
+			//控制轮播图的显示
+			vp_lunbo.setCurrentItem((vp_lunbo.getCurrentItem() + 1) % vp_lunbo.getAdapter().getCount());
+			postDelayed(this, 2000);
+		}
+		
+	}
+```
+
 ## 5. 开源项目
 
 ### [Android-ConvenientBanner](https://github.com/JackChen1999/Android-ConvenientBanner)
@@ -676,13 +714,13 @@ public class RollViewPager extends ViewPager implements ViewPager.OnPageChangeLi
     Copyright 2012 Jake Wharton
     Copyright 2011 Patrik Åkerfeldt
     Copyright 2011 Francisco Figueiredo Jr.
-
+    
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-
+    
        http://www.apache.org/licenses/LICENSE-2.0
-
+    
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
